@@ -1,0 +1,59 @@
+nCREATE DATABASE EX4
+GO
+USE EX4
+GO
+CREATE TABLE COUNTRY
+(
+	country_id INT IDENTITY  PRIMARY KEY
+	,country_name NVARCHAR(255) UNIQUE
+)
+GO
+
+CREATE TABLE DISTRICT
+(
+	district_id INT IDENTITY  PRIMARY KEY
+	,district_name NVARCHAR(255) UNIQUE
+	,country_id INT REFRENCES COUNTRY(country_id)
+)
+GO
+
+CREATE TABLE COMMON
+(
+	common_id INT IDENTITY  PRIMARY KEY
+	,common_name NVARCHAR(255) UNIQUE
+	,district_id INT REFRENCES DISTRICT(district_id)
+	,
+)
+GO
+
+CREATE TABLE UTILS
+(
+	util_id INT IDENTITY PRIMARY KEY
+	,util_name NVARCHAR(255)
+)
+
+CREATE TABLE COFFEE_SHOP
+(
+	coffee_shop_id INT IDENTITY PRIMARY KEY
+	,coffee_shop_name NVARCHAR(255) UNIQUE
+	,coffee_shop_address NVARCHAR(255) NOT NULL
+	,country_id INT REFRENCES COUNTRY(country_id)
+	,district_id INT REFRENCES DISTRICT(district_id)
+	,common_id INT REFRENCES COMMON(common_id)
+	,util_id INT REFRENCES UTIL(util_id)
+)
+
+INSERT INTO COUNTRY VALUES(N'VIET NAM')
+INSERT INTO DISTRICTVALUES(N'HA NOI',1)
+INSERT INTO COMMON VALUES(N'NAM TU LIEM',1)
+INSERT INTO COUNTRY VALUES(N'WIFI')
+INSERT INTO COUNTRY VALUES(N'HIGHLAND COFFEE', N'11A Tan My, Nam Tu Liem, Ha Noi',1,1,1,1)
+
+SELECT * FROM UTIL u JOIN COUNTRY c ON u.country_id= c.country_id
+		     JOIN DISTRICT d ON d.district_id = u.district_id
+		     JOIN COMMON c ON c.common_id = u.common_id
+		     JOIN UTIL t ON t.util_id = u.util_id
+		     WHERE c.country_name LIKE '%%'
+			OR d.district_name LIKE '%%'
+			OR c.common_name LIKE '%%'
+			OR t.util_name LIKE '%%'

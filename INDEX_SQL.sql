@@ -1,0 +1,81 @@
+--I.
+	CREATEDATABASE Lab10
+	USE AdventureWorks
+	SELECT*INTO Lab10.dbo.WorkOrder FROM Production.WorkOrder
+	USE Lab10
+	SELECT*INTO WorkOrderIX FROM WorkOrder
+	SELECT*FROM WorkOrder
+	SELECT*FROM WorkOrderIX
+	CREATE INDEX IX_WorkOrderID ON WorkOrderIX(WorkOrderID)
+	SELECT*FROM WorkOrder where WorkOrderID=72000
+	SELECT*FROM WorkOrderIX where WorkOrderID=72000
+--II.	
+	CREATE DATABASE APTECH
+	GO
+	USE APTECH
+	GO
+	CREATE TABLE CLASSES
+	(
+		class_id INT IDENTITY PRIMARY KEY
+		,class_name VARCHAR(30)UNIQUE	
+		,teacher VARCHAR(30)
+		,time_slot VARCHAR(30)
+		,class INT
+		,lab INT
+	)
+	GO
+	CREATE UNIQUE CLUSTERED  INDEX MyClusteredIndex ON CLASSES(class_name)
+	GO
+	CREATE  NON-CLUSTERED  INDEX TeacherIndex ON CLASSES(teacher)
+	GO
+	DROP INDEX CLASSES.TeacherIndex 
+	GO
+	CREATE INDEX ClassLabIndex ON CLASSES(class, lab)
+	GO
+	SELECT * FROM APTECH.sys.indexes
+	GO
+	
+--III
+	CREATE DATABASE RiverPlate
+	GO
+	USE RiverPlate
+	GO
+	CREATE TABLE STUDENT
+	(
+		studentNo INT IDENTITY PRIMARY KEY
+		,studentName VARCHAR(50)
+		,studentAddress VARCHAR(100)
+		,phoneNo INT
+	)
+	GO
+	CREATE TABLE DEPARTMENT
+	(
+		deptNo INT IDENTITY PRIMARY KEY
+		,deptName VARCHAR(50)
+		,managerName CHAR(30)
+	)
+	GO
+	CREATE TABLE ASSIGINMENT
+	(
+		assignmentNo INT IDENTITY PRIMARY KEY
+		,description VARCHAR(100)
+	)
+	GO
+	CREATE TABLE WORKS_ASSIGN
+	(
+		jobId INT IDENTITY PRIMARY KEY
+		,studentNo INT REFERENCES STUDENT(studentNo)
+		,assignmentNo INT REFERENCES ASSIGNMENT(assignmentNo)
+		,totalHours INT
+		,jobDetails XML
+	)
+	GO
+	CREATE CLUSTERED INDEX IX_Student ON STUDENT(studentNo)
+	GO
+	ALTER INDEX IX_Student 
+	ON STUDENT
+	DISABLE; 
+	GO
+	CREATE  NON-CLUSTERED  INDEX IX_Dept ON DEPARTMENT(deptNo, deptName, managerName)
+	GO
+

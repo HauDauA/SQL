@@ -68,3 +68,14 @@ SELECT COUNT(s.service_id) AS TOTAL_SERVICE_NUMBER
 GO
 SELECT * FROM CUSTOMER cu JOIN SERVICE s
 	ON cu.customer_id = s.customer_id
+
+--8
+CREATE INDEX _CUSTOMER_NAME ON CUSTOMER(customer_name)
+	GO
+CREATE VIEW _KhachHang as
+	SELECT c.customer_name, c.address, c.customer_id FROM CUSTOMER c
+	GO
+CREATE VIEW _KhachHang_ThueBao as
+	SELECT c.customer_id, c.customer_name, s.service_number
+	FROM CUSTOMER c JOIN SERVICE s 
+	ON c.customer_id = s.customer_id

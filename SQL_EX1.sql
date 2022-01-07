@@ -90,3 +90,22 @@ GO
 	WHERE date_order >= convert(date, GETDATE())
  ALTER TABLE [PRODUCT]
 	ADD date_display DATE NOT NULL;
+
+--8
+CREATE INDEX _PRODUCT_NAME ON PRODUCT(product_name)
+	GO
+CREATE INDEX _USER_NAME ON [USER](user_name)
+	GO
+CREATE VIEW _KhachHang as
+	SELECT u.username, u.user_address, u.phone_number FROM [USER] u
+	GO
+CREATE VIEW _SanPham as
+	SELECT p.product_name, p.price FROM PRODUCT p
+	GO
+CREATE VIEW _KhachHang_SanPham as
+	SELECT u.user_name, u.phone_number, p.product_name, od.product_quantity, o.date_order
+	FROM [USER] u 
+	JOIN [ORDER] o ON u.user_id = o.user_id
+	JOIN PRODUCT p ON p.product_id = o.product_id
+	JOIN ORDER_DETAIL od ON od.order_id = o.order_id
+	

@@ -70,5 +70,15 @@ GO
 	SELECT COUNT(p.product_id) FROM PRODUCT p
 	GROUP BY p.product_id
 	
-	
+--8
+	CREATE INDEX _DESCRIPTION_PRODUCT ON PRODUCT(product_name, description)
+	GO
+	CREATE VIEW _SanPham as
+		SELECT p.product_id, p.product_name, p.price FROM PRODUCT p
+	GO
+	CREATE VIEW _SanPham_Hang as
+		SELECT p.product_id, p.product_name, c.category_name
+		FROM PRODUCT p 
+		JOIN CATEGORY c 
+		ON p.category_id = c.category_id
 	

@@ -71,3 +71,23 @@ GO
 SELECT * FROM PRODUCT p JOIN CATEGORY c ON p.category_id = c.category_id
 			JOIN [USER] u ON u.user_id = p.user_id
 GO
+
+--7
+CREATE INDEX _NAME_USER ON [USER](user_name)
+GO
+CREATE VIEW _SanPham as
+	SELECT p.product_id, p.date_import, c.category_name
+	FROM PRODUCT p JOIN CATEGORY c
+	ON p.category_id = c.category_id
+GO
+CREATE VIEW _SanPha,_NCTN as
+	SELECT p.product_id, p.product_name, u.user_name 
+	FROM PRODUCT p JOIN [USER] u
+	ON p.user_id = u.user_id
+GO
+CREATE VIEW _Top_SanPham as
+	SELECT p.product_id, c.category_id, p.date_import
+	FROM  PRODUCT p JOIN CATEGORY c
+	ON p.category_id = c.category_id
+	ORDER BY p.product_id DESC
+	LIMIT 5

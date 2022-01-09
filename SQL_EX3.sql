@@ -79,3 +79,47 @@ CREATE VIEW _KhachHang_ThueBao as
 	SELECT c.customer_id, c.customer_name, s.service_number
 	FROM CUSTOMER c JOIN SERVICE s 
 	ON c.customer_id = s.customer_id
+	GO
+CREATE PROC SP_TimKH_ThueBao
+	@ThueBao VARCHAR(10)
+	AS
+	SELECT c.customer_name, c.address, c.identity_card FROM CUSTOMER c
+	JOIN SERVICE s JOIN c.customer_id = s.customer_id
+	WHERE s.service_number = @ThueBao
+	GO
+EXEC SP_TimKH_ThueBao @ThueBao = '1231131313'
+	GO
+CREATE PROC SP_TimTB_KhachHang
+	@KhachHang NVARCHAR(255)
+	AS
+	SELECT s.service_number FROM SERVICE s 
+	JOIN CUSTOMER c ON s.customer_id = s.customer_id
+	WHERE c.customer_name = @KhachHang
+	GO
+EXEC SP_TimTB_KhachHang @KhachHang = N'';
+	GO
+CREATE PROC SP_ThemTB
+	@CusId INT
+	,@ServiceNumber VARCHAR(10)
+	,@ServiceType NVARCHAR(255)
+	,@DateRegister DATE
+	AS
+	BEGIN
+	IF EXISTS (SELECT customer_id FROM CUSTOMER WHERE customer_id = @CusId);
+	INSERT INTO SERVICE VALUES 
+	(@ServiceNumber, @ServiceType, @DateRegister, @CusId, 1)
+	END
+GO
+EXEC SP_ThemTB @CusId = 1, @ServiceNumber = '1234567890', 
+	       @ServiceType =  N'Trả trước',@DateRegister = '2002-12-12'
+GO
+CREATE PROC SP_HuyTB_MaKH 
+	@CusId INT
+	AS
+	BEGIN
+	DELETE FROM CUSTOMER WHERE customer_id = @CusId
+	END
+GO
+EXEC SP_HuyTB_MaKH @CusId = 1
+	
+		

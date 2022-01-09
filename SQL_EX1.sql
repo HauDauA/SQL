@@ -5,7 +5,7 @@ GO
 --2.
 CREATE TABLE [USER]
 (
-	user_id INT IDENTITY PRIMARY KEY
+	user_id   IDENTITY PRIMARY KEY
 	,user_name NVARCHAR(255) NOT NULL
 	,user_address NVARCHAR(255) NOT NULL
 	,phone_number VARCHAR(10) NOT NULL
@@ -108,4 +108,31 @@ CREATE VIEW _KhachHang_SanPham as
 	JOIN [ORDER] o ON u.user_id = o.user_id
 	JOIN PRODUCT p ON p.product_id = o.product_id
 	JOIN ORDER_DETAIL od ON od.order_id = o.order_id
-	
+	GO
+CREATE PROC SP_TimKH_MaKH 
+	@MaKH INT
+	AS
+	SELECT u.user_name, u.address, u.phone_number
+	FROM [USER] u WHERE u.user_id = @MaKH
+GO
+EXEC SP_TimKH_MaKH @MaKH = 1
+GO
+CREATE PROC SP_TimKH_MaHD
+	@Ma_HD INT
+	AS
+	SELECT u.user_name, u.address, u.phone_number FROM [USER] u 
+	JOIN ORDER o ON u.user_id = o.user_id 
+	WHERE o.order_id = @MaHD
+GO
+EXEC  SP_TimKH_MaHD @MaHd = 1
+GO
+CREATE PROC SP_SanPham_MaKH
+	@MaKH INT
+	AS
+	SELECT p.product_name, od.product_quantity FROM [USER] u 
+	JOIN ORDER o ON u.user_id = o.order_id 
+	JOIN ORDER_DETAIL od ON od.order_id = o.order_id
+	JOIN PRODUCT p ON p.product_id = od.product_id
+	WHERE u.user_id = @MaKH
+	GO
+EXEC SP_SanPham_MaKH @MaKH = 1

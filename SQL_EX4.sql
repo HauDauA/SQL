@@ -72,7 +72,7 @@ SELECT * FROM PRODUCT p JOIN CATEGORY c ON p.category_id = c.category_id
 			JOIN [USER] u ON u.user_id = p.user_id
 GO
 
---7
+--8
 CREATE INDEX _NAME_USER ON [USER](user_name)
 GO
 CREATE VIEW _SanPham as
@@ -91,3 +91,65 @@ CREATE VIEW _Top_SanPham as
 	ON p.category_id = c.category_id
 	ORDER BY p.product_id DESC
 	LIMIT 5
+GO
+CREATE PROC SP_Them_LoaiSP
+	@CategoryId  VARCHAR(255)
+	@CategoryName NVARCHAR(255)
+	AS
+	BEGIN
+	IF NOT EXISTS (SELECT * FROM CATEGORY WHERE category_id = @CategoryId)
+	INSERT INTO CATEGORY VALUES
+	(@CategoryId, @CatgeoryName, 1)
+	END
+GO
+EXEC SP_Them_LoaiSP @CategoryId = 'CUSO4', @CategoryName = N'Ba Lô'
+GO
+CREATE PROC SP_Them_NCTN 
+	@UserId VARCHAR(255)
+	,@UserName NVARCHAR(255)
+	AS
+	BEGIN
+	IF NOT EXISTS (SELECT * FROM [USER] WHERE user_id = @UserId)
+	INSERT INTO [USER] VALUES
+	(@UserId, @UserName, 1)
+	END
+	GO
+EXEC SP_Them_NCTN @UserId = 'CUSO4', @UserName = N'Hậu'
+	GO
+CREATE PROC SP_Them_SanPham
+	@CategoryId VARCHAR(255)
+	,@ProductId VARCHAR(255)
+	,@ProductName NVARCHAR(255)
+	,@UserId VARCHAR(255)
+	,@DateImport DATE
+	AS
+	BEGIN
+	IF 
+	EXIST(SELECT * FROM CATEGORY WHERE category_id = @CategoryId)
+	AND EXIST(SELECT * FROM [USER] WHERE user_id = @UserId)
+	AND NOT EXIST(SELECT * FROM PRODUCT WHERE product_id = @ProductId)
+	INSERT INTO PRODUCT VALUES
+	(@ProductId, @ProductName, @CategoryId, @UserId, @DateImport, 1)
+	END
+	GO
+EXEC SP_Them_SanPham 
+	@CategoryId = 'CUCL2'
+	,@ProductId = 'FENO3'
+	,@ProductName = 'MŨ'
+	,@UserId = 'FEO'
+	,@DateImport = '2022-02-02'
+	GO
+CREATE PROC SP_Xoa_SanPham
+	@ProductId VARCHAR(255)
+	AS
+	DELETE FROM PRODUCT WHERE product_id = @ProductId
+GO
+EXEC SP_Xoa_SanPham @ProductId = 'CUSO4'
+GO
+CREATE PROC SP_Xoa_SanPham_TheoLoai
+	@CategoryId VARCHAR(255)
+	AS
+	DELETE FROM PRODUCT WHERE category_id = @CategoryId
+GO
+EXEC SP_Xoa_SanPham_TheoLoai @Category = 'CUCL2'
+GO

@@ -6,7 +6,7 @@ GO
 CREATE TABLE CATEGORY
 (
 	category_id INT IDENTITY PRIMARY KEY
-	,category_name VARCHAR(255) NOT NULL
+	,category_name NVARCHAR(255) NOT NULL
 	,address NVARCHAR(255) NOT NULL
 	,phone_number VARCHAR(10) NOT NULL
 	,status INT
@@ -81,4 +81,29 @@ GO
 		FROM PRODUCT p 
 		JOIN CATEGORY c 
 		ON p.category_id = c.category_id
+	GO
+	CREATE PROC SP_SanPham_TenHang 
+		@TenHang NVARCHAR(255)
+		AS
+		SELECT p.product_name, p.address, p.phone_number FROM PRODUCT p
+		JOIN CATEGORY c ON p.category_id = c.category_id
+		WHERE p.product_name = @TenHang
+	GO
+	EXEC SP_SanPham_TenHang @TenHang = N''
+	GO
+	CREATE PROC SP_SanPham_Gia
+		@Gia FLOAT
+		AS
+		SELECT p.product_name, p.description, p.util, p.price FROM PRODUCT p
+		WHERE p.price >= @Gia
+		GO
+	EXEC SP_SanPham_Gia @Gia = 123.33
+	GO
+	CREATE PROC SP_SanPham_HetHang
+		AS
+		SELECT * FROM PRODUCT p
+		WHERE p.quantity = 0
+	GO
+	EXEC SP_SanPham_HetHang
+	GO
 	

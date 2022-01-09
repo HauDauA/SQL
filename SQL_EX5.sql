@@ -56,3 +56,38 @@ SELECT * FROM [USER] u JOIN PHONEBOOK p ON u.user_id = p.user_id
 GO
 SELECT * FROM [USER] u JOIN PHONEBOOK p ON u.user_id = p.user_id WHERE p.phone_number = '123456789'
 GO
+--8
+CREATE INDEX IX_HOTEN ON [USER](user_name)
+GO
+CREATE INDEX IX_SoDienThoai ON [PHONEBOOK](phone_number)
+GO
+CREATE VIEW View_SoDienThoai
+AS
+	SELECT u.user_name, p.phone_number FROM [USER] u 
+	JOIN [PHONEBOOK] p ON u.user_id = p.user_id
+GO
+CREATE VIEW View_SinhNhat
+AS
+	SELECT FROM [USER] u
+	WHERE MONTH(u.birthday) = MONTH(GETDATE());
+GO
+CREATE PROC SP_Them_DanhBa
+	@UserId INT
+	,@PhoneNumber VARCHAR(10)
+	AS
+	IF EXIST(SELECT * FROM [USER] WHERE user_id = @UserId)
+	INSERT INTO PHONEBOOK VALUES
+	(@PhoneNumber, @UserId , 1)
+	GO
+EXEC SP_Them_DanhBa @UserId = 1, @PhoneNumber = '1234567890'
+	GO
+CREATE PROC SP_Tim_DanhBa
+	@UserName NVARCHAR(255)
+	AS
+	SELECT p.phone_number FROM [USER] u 
+	JOIN PHONEBOOK p ON u.user_id = p.user_id 
+	WHERE u.user_name LIKE @UserName
+	GO
+EXEC SP_Tim_DanhBa @UserName = 'HA'
+GO
+			
